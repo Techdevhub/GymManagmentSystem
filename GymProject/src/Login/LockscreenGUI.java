@@ -2,8 +2,19 @@ package Login;
 
 
 import TrayBar.DisplayTrayIcon;
+import gymproject.Dtcon;
 import gymproject.FirstPage;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -11,24 +22,391 @@ import javax.swing.JOptionPane;
 
 public class LockscreenGUI extends javax.swing.JFrame
 { 
+    //Recent Task active Intilization
+    
+    int h = 0;
+    int m = 0;
+    boolean bb = true;
+    boolean stop = true;
+    int hour = 0;
+    int min = 0;
+    int sec = 0;
+    int workingID = 0;
+    
+    //Init Complete
+    
+    //Database Init
+    
+    Dtcon d = new Dtcon();
+    Connection c = d.getconnection();
+    Statement st;
+    PreparedStatement ps;
+    
+    //Complete
     
     public String MasterString = "2626";
     
+    FirstPage fp = new FirstPage();
+    
     int chr1,chr2,chr3,chr4;
+    
+    String ttitle,tdis;
     
     int buttonClick;
     
     int count =0;
     
+    public boolean flag = false;
+    
+    String name = null, phoneno = null;
+    int paid=0;
+    
     ImageIcon selected = new ImageIcon(getClass().getResource("/Login/Images/circle_filled.png"));
     ImageIcon unselected = new ImageIcon(getClass().getResource("/Login/Images/circle_unfilled.png"));
+    
+    void updatepass() {
+        try {
+            String query = "SELECT * FROM passtable WHERE `ID`=1;";
+            st = c.createStatement();
+            ResultSet rss = st.executeQuery(query);
+            while(rss.next()) {
+                MasterString = rss.getString(2);
+            }
+        }
+        catch(SQLException ex) {
+            System.err.println(ex);
+        }
+    }
     
     public LockscreenGUI()
     {
         initComponents();
         DisplayTrayIcon DTI = new DisplayTrayIcon();
+        
+        recarection();
+        act();
+        new Thread()
+        {
+            public void run()
+            {
+                while(bb)
+                {
+                    Calendar cal = new GregorianCalendar();
+                    hour = cal.get(Calendar.HOUR_OF_DAY);
+                    min = cal.get(Calendar.MINUTE);
+                    sec = cal.get(Calendar.SECOND);
+                    
+                    if( hour == h && min == m)
+                    {
+                        if(stop)
+                        {
+                            JOptionPane.showMessageDialog(null, ttitle+"\n"+tdis,"Task Alart !",JOptionPane.INFORMATION_MESSAGE);
+                            stop = false;
+                            react();
+                        }
+                    }
+                    try {
+                        boolean flag = fp.setflag();
+//                        System.out.println(flag);
+                        if(flag == true)
+                        {
+                            recarection();
+                            act();
+                            fp.resetflag();
+                        }
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(LockscreenGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }.start();
+        
     }
 
+    
+    void duedateCrt()
+    {
+        try {
+            String sql="SELECT * FROM fees ORDER BY due_date DESC;";
+            st= c.createStatement();
+            ResultSet rss=st.executeQuery(sql);
+
+            Calendar cal1 = new GregorianCalendar();
+            int yr = cal1.get(Calendar.YEAR);
+            int mn = cal1.get(Calendar.MONTH);
+            mn++;
+            int day = cal1.get(Calendar.DATE);
+            Calendar cal = new GregorianCalendar();
+            int tyr,tmn,tday;
+            
+            Object[] obj = new Object[3];
+            obj[0]="Reminder At 9:30";
+            obj[1]="Reminder At 20:30";
+            obj[2]="Posponed the date";
+            
+            while(rss.next())
+            {
+                Date date = rss.getDate(5);
+                if(date == null)
+                {
+                    break;
+                }
+                cal.setTime(date);
+                tyr = cal.get(Calendar.YEAR);
+                tmn = cal.get(Calendar.MONTH);
+                tmn++;
+                tday = cal.get(Calendar.DATE);
+                if(yr==tyr && mn==tmn && day==tday)
+                {
+                    paid = rss.getInt(3);
+                    workingID = rss.getInt(1);
+                    sql="SELECT `Fname`,`Lname`,`Ph_num` FROM `user` WHERE `ID`= "+workingID+" ;";
+                    st= c.createStatement();
+                    ResultSet rss1=st.executeQuery(sql);
+                    while(rss1.next())
+                    {
+                        name = rss1.getString(1)+" "+rss1.getString(2);
+                        phoneno = rss1.getString(3);
+                    }
+                    int num = JOptionPane.showOptionDialog(null, "Name  :- "+name+"\n\nPhone Number :- "+phoneno+
+                            "\n\nPaid :-"+paid+"\n\n\nSelect Your Action.", 
+                            "Due Date Complete.☻", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, obj, "Posponed the date");
+                    switch (num) {
+                        case 0:
+                            {
+                                try
+                                {
+                                    sql="INSERT INTO tasks(`name`,other,`date`,`time`,`Completed`) VALUES"
+                                            + "('"+name+"','Phone Number :- "+phoneno+"\n\nPaid :-"+paid+".','"+yr+"-"+mn+"-"+day+"','9:30',1);";
+                                    ps = c.prepareStatement(sql);
+                                    ps.executeUpdate();
+                                }
+                                catch(SQLException e)
+                                {
+                                    try
+                                    {
+                                        sql="DELETE FROM tasks WHERE `name`='"+name+"';";
+                                        ps = c.prepareStatement(sql);
+                                        ps.executeUpdate();
+                                        sql="INSERT INTO tasks(`name`,other,`date`,`time`,`Completed`) VALUES"
+                                                + "('"+name+"','Phone Number :- "+phoneno+"\n\nPaid :-"+paid+".','"+yr+"-"+mn+"-"+day+"','7:30',1);";
+                                        ps = c.prepareStatement(sql);
+                                        ps.executeUpdate();
+                                    }
+                                    catch(SQLException ex)
+                                    {
+                                        JOptionPane.showMessageDialog(null, "Unable To Set task");
+                                    }
+                                }
+                                break;
+                            }
+                        case 1:
+                            {
+                                try
+                                {
+                                    sql="INSERT INTO tasks(`name`,other,`date`,`time`,`Completed`) VALUES"
+                                            + "('"+name+"','Phone Number :- "+phoneno+"\n\nPaid :-"+paid+".','"+yr+"-"+mn+"-"+day+"','20:30',1);";
+                                    ps = c.prepareStatement(sql);
+                                    ps.executeUpdate();
+                                }
+                                catch(SQLException e)
+                                {
+                                    try
+                                    {
+                                        sql="DELETE FROM tasks WHERE `name`='"+name+"';";
+                                        ps = c.prepareStatement(sql);
+                                        ps.executeUpdate();
+                                        sql="INSERT INTO tasks(`name`,other,`date`,`time`,`Completed`) VALUES"
+                                                + "('"+name+"','Phone Number :- "+phoneno+"\n\nPaid :-"+paid+".','"+yr+"-"+mn+"-"+day+"','20:30',1);";
+                                        ps = c.prepareStatement(sql);
+                                        ps.executeUpdate();
+                                    }
+                                    catch(SQLException ex)
+                                    {
+                                        JOptionPane.showMessageDialog(null, "Unable To Set task");
+                                    }
+                                }
+                                break;
+                            }
+                        case 2:
+                            JOptionPane.showMessageDialog(null, "If Date Excludes the Subcription Limit.\nThe Member can put in Unactive Member Catagory",
+                                    "Alart!",JOptionPane.WARNING_MESSAGE);
+                            LocalDate date1 = LocalDate.of(yr, mn, day) ;
+                            datePicker1.setDate(date1);
+                            JOptionPane.showMessageDialog(null,datePicker1,"Select Date To Be set",JOptionPane.INFORMATION_MESSAGE);
+                            try
+                            {
+                                String query = "UPDATE fees SET due_date='"+datePicker1.toString()+"' WHERE `ID`="+workingID;
+                                ps = c.prepareStatement(query);
+                                ps.executeUpdate();
+                            }
+                            catch(SQLException exx)
+                            {
+                                JOptionPane.showMessageDialog(null, "Unable to set date Line 239");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        catch (SQLException e){
+            JOptionPane.showMessageDialog(null,"Database is Not connected");
+            System.err.println("error" + e.getMessage());
+        }
+    }
+    
+    void duedatePrv()
+    {
+        try {
+            String sql="SELECT * FROM fees ORDER BY due_date DESC;";
+            st= c.createStatement();
+            ResultSet rss=st.executeQuery(sql);
+
+            Calendar cal1 = new GregorianCalendar();
+            int yr = cal1.get(Calendar.YEAR);
+            int mn = cal1.get(Calendar.MONTH);
+            mn++;
+            int day = cal1.get(Calendar.DATE);
+            Calendar cal = new GregorianCalendar();
+            int tyr,tmn,tday;
+            
+            Object[] obj = new Object[3];
+            obj[0]="Reminder At 9:30";
+            obj[1]="Reminder At 20:30";
+            obj[2]="Posponed the date";
+            
+            while(rss.next())
+            {
+                Date date = rss.getDate(5);
+                if(date == null)
+                {
+                    break;
+                }
+                cal.setTime(date);
+                tyr = cal.get(Calendar.YEAR);
+                tmn = cal.get(Calendar.MONTH);
+                tmn++;
+                tday = cal.get(Calendar.DATE);
+                boolean modiflag = false;
+                if(yr==tyr && mn==tmn && day>tday)
+                {
+                    modiflag=true;
+                }
+                else if(yr==tyr && mn>tmn)
+                {
+                    modiflag = true;
+                }
+                else if(yr>tyr)
+                {
+                    modiflag = true;
+                }
+                if(modiflag)
+                {
+                    paid = rss.getInt(3);
+                    workingID = rss.getInt(1);
+                    sql="SELECT `Fname`,`Lname`,`Ph_num` FROM `user` WHERE `ID`= "+workingID+" ;";
+                    st= c.createStatement();
+                    ResultSet rss1=st.executeQuery(sql);
+                    while(rss1.next())
+                    {
+                        name = rss1.getString(1)+" "+rss1.getString(2);
+                        phoneno = rss1.getString(3);
+                    }
+                    int num = JOptionPane.showOptionDialog(null, "Name  :- "+name+"\n\nPhone Number :- "+phoneno+
+                            "\n\nPaid :-"+paid+"\n\n\nSelect Your Action.", 
+                            "Due Date Complete.☻", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, obj, "Posponed the date");
+                    switch (num) {
+                        case 0:
+                            {
+                                try
+                                {
+                                    sql="INSERT INTO tasks(`name`,other,`date`,`time`,`Completed`) VALUES"
+                                            + "('"+name+"','Phone Number :- "+phoneno+"\n\nPaid :-"+paid+".','"+yr+"-"+mn+"-"+day+"','9:30',1);";
+                                    ps = c.prepareStatement(sql);
+                                    ps.executeUpdate();
+                                }
+                                catch(SQLException e)
+                                {
+                                    try
+                                    {
+                                        sql="DELETE FROM tasks WHERE `name`='"+name+"';";
+                                        ps = c.prepareStatement(sql);
+                                        ps.executeUpdate();
+                                        sql="INSERT INTO tasks(`name`,other,`date`,`time`,`Completed`) VALUES"
+                                                + "('"+name+"','Phone Number :- "+phoneno+"\n\nPaid :-"+paid+".','"+yr+"-"+mn+"-"+day+"','7:30',1);";
+                                        ps = c.prepareStatement(sql);
+                                        ps.executeUpdate();
+                                    }
+                                    catch(SQLException ex)
+                                    {
+                                        JOptionPane.showMessageDialog(null, "Unable To Set task");
+                                    }
+                                }
+                                break;
+                            }
+                        case 1:
+                            {
+                                try
+                                {
+                                    sql="INSERT INTO tasks(`name`,other,`date`,`time`,`Completed`) VALUES"
+                                            + "('"+name+"','Phone Number :- "+phoneno+"\n\nPaid :-"+paid+".','"+yr+"-"+mn+"-"+day+"','20:30',1);";
+                                    ps = c.prepareStatement(sql);
+                                    ps.executeUpdate();
+                                }
+                                catch(SQLException e)
+                                {
+                                    try
+                                    {
+                                        sql="DELETE FROM tasks WHERE `name`='"+name+"';";
+                                        ps = c.prepareStatement(sql);
+                                        ps.executeUpdate();
+                                        sql="INSERT INTO tasks(`name`,other,`date`,`time`,`Completed`) VALUES"
+                                                + "('"+name+"','Phone Number :- "+phoneno+"\n\nPaid :-"+paid+".','"+yr+"-"+mn+"-"+day+"','20:30',1);";
+                                        ps = c.prepareStatement(sql);
+                                        ps.executeUpdate();
+                                    }
+                                    catch(SQLException ex)
+                                    {
+                                        JOptionPane.showMessageDialog(null, "Unable To Set task");
+                                    }
+                                }
+                                break;
+                            }
+                        case 2:
+                            JOptionPane.showMessageDialog(null, "If Date Excludes the Subcription Limit.\nThe Member can put in Unactive Member Catagory",
+                                    "Alart!",JOptionPane.WARNING_MESSAGE);
+                            LocalDate date1 = LocalDate.of(yr, mn, day) ;
+                            datePicker1.setDate(date1);
+                            JOptionPane.showMessageDialog(null,datePicker1,"Select Date To Be set",JOptionPane.INFORMATION_MESSAGE);
+                            try
+                            {
+                                String query = "UPDATE fees SET due_date='"+datePicker1.toString()+"' WHERE `ID`="+workingID;
+                                ps = c.prepareStatement(query);
+                                ps.executeUpdate();
+                            }
+                            catch(SQLException exx)
+                            {
+                                JOptionPane.showMessageDialog(null, "Unable to set date Line 239");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        catch (SQLException e){
+            JOptionPane.showMessageDialog(null,"Database is Not connected");
+            System.err.println("error" + e.getMessage());
+        }
+    }
+    
+    
+    
+    
     void lockpass()
     {
         count++;
@@ -54,9 +432,12 @@ public class LockscreenGUI extends javax.swing.JFrame
                 
                 String typedCode = chr1 + "" + chr2 + "" + chr3 + "" + chr4;
                 
+                updatepass();
+                
                 if(typedCode.equals(MasterString))
                 {
-                    FirstPage fp = new FirstPage();
+                    duedateCrt();
+                    duedatePrv();
                     fp.setVisible(true);
                 }
                 else
@@ -75,10 +456,202 @@ public class LockscreenGUI extends javax.swing.JFrame
         }
     }
     
+    
+    //task funtion
+    
+    void recarection()
+    {
+        try {
+            String sql="SELECT * FROM `tasks` WHERE `Completed`=1 ORDER BY `time`;";
+            st= c.createStatement();
+            ResultSet rss=st.executeQuery(sql);
+
+            Calendar cal1 = new GregorianCalendar();
+            int yr = cal1.get(Calendar.YEAR);
+            int mn = cal1.get(Calendar.MONTH);
+            mn++;
+            int day = cal1.get(Calendar.DATE);
+            int hr = cal1.get(Calendar.HOUR_OF_DAY);
+            int min = cal1.get(Calendar.MINUTE);
+            Calendar cal = new GregorianCalendar();
+            int tyr,tmn,tday;
+            while(rss.next())
+            {
+                workingID = rss.getInt(1);
+                Date date = rss.getDate(4);
+                cal.setTime(date);
+                tyr = cal.get(Calendar.YEAR);//taken year
+                tmn = cal.get(Calendar.MONTH);//taken month
+                tmn++;
+                tday = cal.get(Calendar.DATE);//taken date
+                
+                if(yr==tyr && mn==tmn && day>tday)
+                {
+                    sql="UPDATE tasks SET `Completed`= 0 WHERE `ID`="+workingID+";";
+                    PreparedStatement ps = c.prepareStatement(sql);
+                    ps.executeUpdate();
+                }
+                else if(yr==tyr && mn>tmn)
+                {
+                    sql="UPDATE tasks SET `Completed`= 0 WHERE `ID`="+workingID+";";
+                    PreparedStatement ps = c.prepareStatement(sql);
+                    ps.executeUpdate();
+                }
+                else if(yr>tyr)
+                {
+                    sql="UPDATE tasks SET `Completed`= 0 WHERE `ID`="+workingID+";";
+                    PreparedStatement ps = c.prepareStatement(sql);
+                    ps.executeUpdate();
+                }
+                else if(yr==tyr && mn==tmn && day==tday)
+                {
+                    Time time = rss.getTime(5);
+                    cal.setTime(time);
+                    h = cal.get(Calendar.HOUR_OF_DAY);
+                    m = cal.get(Calendar.MINUTE);
+                    if(h==hr)
+                    {
+                        if(m<min)
+                        {
+                            sql="UPDATE tasks SET `Completed`= 0 WHERE `ID`="+workingID+";";
+                            PreparedStatement ps = c.prepareStatement(sql);
+                            ps.executeUpdate();
+                        }
+                    }
+                    if(h<hr)
+                    {
+                        sql="UPDATE tasks SET `Completed`= 0 WHERE `ID`="+workingID+";";
+                        PreparedStatement ps = c.prepareStatement(sql);
+                        ps.executeUpdate();
+                    }
+                }
+            }
+        }
+        catch (SQLException e){
+            JOptionPane.showMessageDialog(null,"Database is Not connected");
+            System.err.println("error" + e.getMessage());
+        }
+    }
+    
+    void act()
+    {
+        try {
+            String sql="SELECT * FROM `tasks` WHERE `Completed`=1 ORDER BY `time`;";
+            st= c.createStatement();
+            ResultSet rss=st.executeQuery(sql);
+
+            Calendar cal1 = new GregorianCalendar();
+            int yr = cal1.get(Calendar.YEAR);
+            int mn = cal1.get(Calendar.MONTH);
+            mn++;
+            int day = cal1.get(Calendar.DATE);
+            int hr = cal1.get(Calendar.HOUR_OF_DAY);
+            int min = cal1.get(Calendar.MINUTE);
+            Calendar cal = new GregorianCalendar();
+            int tyr,tmn,tday;
+            while(rss.next())
+            {
+                Date date = rss.getDate(4);
+                cal.setTime(date);
+                tyr = cal.get(Calendar.YEAR);
+                tmn = cal.get(Calendar.MONTH);
+                tmn++;
+                tday = cal.get(Calendar.DATE);
+                if(yr==tyr && mn==tmn && day==tday)
+                {
+                    ttitle = rss.getString(2);
+                    tdis = rss.getString(3);
+                    workingID = rss.getInt(1);
+                    Time time = rss.getTime(5);
+                    cal.setTime(time);
+                    h = cal.get(Calendar.HOUR_OF_DAY);
+                    m = cal.get(Calendar.MINUTE);
+                    stop = true;
+                    if(h==hr)
+                    {
+                        if(m>min)
+                        {
+                            break;
+                        }
+                    }
+                    if(h>hr)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        catch (SQLException e){
+            JOptionPane.showMessageDialog(null,"Database is Not connected");
+            System.err.println("error" + e.getMessage());
+        }
+    }
+    
+    void react()
+    {
+        try {
+            
+            String sql="UPDATE tasks SET `Completed`= 0 WHERE `ID`="+workingID+";";
+            ps = c.prepareStatement(sql);
+            ps.executeUpdate();
+            
+            sql="SELECT * FROM `tasks` WHERE `Completed`=1 ORDER BY `time`;";
+            st= c.createStatement();
+            ResultSet rss=st.executeQuery(sql);
+
+            Calendar cal1 = new GregorianCalendar();
+            int yr = cal1.get(Calendar.YEAR);
+            int mn = cal1.get(Calendar.MONTH);
+            mn++;
+            int day = cal1.get(Calendar.DATE);
+            int hr = cal1.get(Calendar.HOUR_OF_DAY);
+            int min = cal1.get(Calendar.MINUTE);
+            Calendar cal = new GregorianCalendar();
+            int tyr,tmn,tday;
+            while(rss.next())
+            {
+                stop = true;
+                Date date = rss.getDate(4);
+                cal.setTime(date);
+                tyr = cal.get(Calendar.YEAR);
+                tmn = cal.get(Calendar.MONTH);
+                tmn++;
+                tday = cal.get(Calendar.DATE);
+                if(yr==tyr && mn==tmn && day==tday)
+                {
+                    ttitle = rss.getString(2);
+                    tdis = rss.getString(3);
+                    workingID = rss.getInt(1);
+                    Time time = rss.getTime(5);
+                    cal.setTime(time);
+                    h = cal.get(Calendar.HOUR_OF_DAY);
+                    m = cal.get(Calendar.MINUTE);
+                    if(h==hr)
+                    {
+                        if(m>min)
+                        {
+                            break;
+                        }
+                    }
+                    if(h>hr)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        catch (SQLException e){
+            JOptionPane.showMessageDialog(null,"Database is Not connected");
+            System.err.println("error" + e.getMessage());
+        }
+    }
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        datePicker1 = new com.github.lgooddatepicker.components.DatePicker();
         Button0 = new javax.swing.JLabel();
         Button9 = new javax.swing.JLabel();
         Button8 = new javax.swing.JLabel();
@@ -452,6 +1025,7 @@ public class LockscreenGUI extends javax.swing.JFrame
     private javax.swing.JLabel Code3;
     private javax.swing.JLabel Code4;
     private javax.swing.JLabel Heading;
+    private com.github.lgooddatepicker.components.DatePicker datePicker1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

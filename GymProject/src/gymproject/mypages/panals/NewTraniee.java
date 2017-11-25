@@ -4,7 +4,6 @@ package gymproject.mypages.panals;
 import gymproject.BalanceDateConfrmation;
 import gymproject.Dtcon;
 import java.awt.Color;
-import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -1396,7 +1395,7 @@ public class NewTraniee extends javax.swing.JPanel {
     }//GEN-LAST:event_amountKeyPressed
 
     private void savebtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_savebtnMouseClicked
-        int createdID = 0;
+        Object createdID = 0;
         
         if(BalPayment.getText().equals("0"))
         {
@@ -1464,6 +1463,20 @@ public class NewTraniee extends javax.swing.JPanel {
                 query = "INSERT INTO `database_central`.`fees` (`ID`, `subcription_ID`, `paid`, `paying_date`, `due_date`, `extra`) VALUES ('"+createdID+"', '"+subSelection.getSelectedIndex()+"', '"+paidpya+"', '"+current_Date+"', NULL, '0');";
                 pst= c.prepareStatement(query);
                 pst.executeUpdate();
+                
+                try {
+                    Calendar cal = new GregorianCalendar();
+                    int dat = cal.get(Calendar.DATE);
+                    int mon = cal.get(Calendar.MONTH);
+                    mon++;
+                    int yr = cal.get(Calendar.YEAR);
+                    query = "INSERT INTO `database_central`.`history` (`ID`, `userID`, `amount`, `date`) VALUES (NULL, '"+createdID+"', '"+amount.getText()+"', '"+yr+"-"+mon+"-"+dat+"')";
+                    pst = c.prepareStatement(query);
+                    pst.executeUpdate();
+                }
+                catch(SQLException e) {
+                    JOptionPane.showMessageDialog(null, "Recent Table not updated.\nline = 1478 error");
+                }
                 
                 balance = false;
                 JOptionPane.showMessageDialog(null, "Your Acccount is Created\n\nThe generated ID is "+createdID);
@@ -1561,6 +1574,20 @@ public class NewTraniee extends javax.swing.JPanel {
                     pst= c.prepareStatement(query);
                     pst.executeUpdate();
 
+                    
+                    try {
+                        Calendar cal = new GregorianCalendar();
+                        int dat = cal.get(Calendar.DATE);
+                        int mon = cal.get(Calendar.MONTH);
+                        mon++;
+                        int yr = cal.get(Calendar.YEAR);
+                        query = "INSERT INTO `database_central`.`history` (`ID`, `userID`, `amount`, `date`) VALUES (NULL, '"+createdID+"', '"+amount.getText()+"', '"+yr+"-"+mon+"-"+dat+"')";
+                        pst = c.prepareStatement(query);
+                        pst.executeUpdate();
+                    }
+                    catch(SQLException e) {
+                        JOptionPane.showMessageDialog(null, "Recent Table not updated.\nline = 1589 error");
+                    }
                     
                     balance = false;
                     BalanceDateConfrmation BDC = new BalanceDateConfrmation();

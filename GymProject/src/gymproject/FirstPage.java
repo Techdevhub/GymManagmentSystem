@@ -15,6 +15,17 @@ public class FirstPage extends javax.swing.JFrame {
     Notification_page np;
     accountPage fp;
     
+    public boolean setflag()
+    {
+        boolean flag = tp.flag;
+        return flag;
+    }
+    
+    public void resetflag()
+    {
+        tp.flag = false;
+    }
+    
     public FirstPage() {
         
         this.setUndecorated(true);
@@ -42,6 +53,8 @@ public class FirstPage extends javax.swing.JFrame {
         tp.setVisible(false);
         np.setVisible(false);
         fp.setVisible(false);
+        
+        
     }
 
  
@@ -409,6 +422,7 @@ public class FirstPage extends javax.swing.JFrame {
         tp.setVisible(false);
         np.setVisible(false);
         fp.setVisible(true);
+        fp.setinit();
     }//GEN-LAST:event_jMenu4MenuSelected
 
     public static void main(String args[]) {

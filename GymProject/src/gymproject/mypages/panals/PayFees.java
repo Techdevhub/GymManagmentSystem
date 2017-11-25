@@ -1,12 +1,15 @@
 
 package gymproject.mypages.panals;
 
+import gymproject.BalanceDateConfrmation;
 import gymproject.Dtcon;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -87,6 +90,7 @@ public class PayFees extends javax.swing.JPanel {
             subcription_flag=1;
         } 
         catch (SQLException ex) {
+            System.out.println("Line = 91");
             Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -118,6 +122,7 @@ public class PayFees extends javax.swing.JPanel {
             }
             
         } catch (SQLException ex) {
+            System.out.println("Line = 122");
             Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -816,6 +821,7 @@ public class PayFees extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException ex) {
+                System.out.println("Line = 820");
                 Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
             }
             
@@ -960,10 +966,38 @@ public class PayFees extends javax.swing.JPanel {
                         ps.executeUpdate();
 
                     }
-
+                    try {
+                        Calendar cal = new GregorianCalendar();
+                        int date = cal.get(Calendar.DATE);
+                        int mon = cal.get(Calendar.MONTH);
+                        mon++;
+                        int yr = cal.get(Calendar.YEAR);
+                        query = "INSERT INTO `database_central`.`history` (`ID`, `userID`, `amount`, `date`) VALUES (NULL, '"+id_num+"', '"+amnflag+"', '"+yr+"-"+mon+"-"+date+"')";
+                        ps = c.prepareStatement(query);
+                        ps.executeUpdate();
+                    }
+                    catch(SQLException e) {
+                        JOptionPane.showMessageDialog(SearchPane, "Recent Table not updated.\nline = 980 error");
+                    }
                     balance=false;
-                    JOptionPane.showMessageDialog(SearchPane, "Data Saved Successfully", "Done", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(SearchPane, "Data Saved Successfully\n\nPress OK To continue.", "Done", JOptionPane.INFORMATION_MESSAGE);
+                    String checkflag = bal.getText();
+                    int checkflagConvetred = Integer.parseInt(checkflag);
+                    if(checkflagConvetred > 0)
+                    {
+                        balance = false;
+                        BalanceDateConfrmation BDC = new BalanceDateConfrmation();
+                        BDC.setVisible(true);
+                        BDC.ID = id_num;
+                    }
+                    else
+                    {
+                        query = "UPDATE fees SET due_date= NULL  WHERE `ID`="+id_num;
+                        ps = c.prepareStatement(query);
+                        ps.executeUpdate();
+                    }
                 } catch (SQLException ex) {
+                    System.out.println("Line = 977");
                     Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } 
@@ -986,6 +1020,7 @@ public class PayFees extends javax.swing.JPanel {
                 bal.setText(String.valueOf(s-total));
                 
             } catch (SQLException ex) {
+                System.out.println("Line = 999");
                 Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
             }
             paidAmount = paid.getText();
@@ -1075,6 +1110,7 @@ public class PayFees extends javax.swing.JPanel {
                 paidAmountNum2 = Integer.parseInt(bal.getText());
                 subcription_flag=1;
             } catch (SQLException ex) {
+                System.out.println("Line = 1088");
                 Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
             }
             
@@ -1117,6 +1153,7 @@ public class PayFees extends javax.swing.JPanel {
                 paidAmountNum2 = Integer.parseInt(bal.getText());
                 
             } catch (SQLException ex) {
+                System.out.println("Line = 1130");
                 Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("/n/n/n"+ex+"/n/n/n");
             }
@@ -1127,13 +1164,10 @@ public class PayFees extends javax.swing.JPanel {
     private void amountCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_amountCaretUpdate
         String key = amount.getText();
         int keyNum = 0;
-        System.out.println(key);
         switch (key) {
             case "Enter Amount":
-                System.out.println("NO DATA");
                 break;
             case "":
-                System.out.println("Empty");
                 paid.setText(Integer.toString(paidAmountNum));
                 bal.setText(Integer.toString(paidAmountNum2));
                 break;
@@ -1188,6 +1222,7 @@ public class PayFees extends javax.swing.JPanel {
                 }
 
             } catch (SQLException ex) {
+                System.out.println("Line = 1198");
                 Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1225,6 +1260,7 @@ public class PayFees extends javax.swing.JPanel {
                 }
 
             } catch (SQLException ex) {
+                System.out.println("Line = 1235");
                 Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1272,26 +1308,47 @@ public class PayFees extends javax.swing.JPanel {
                 query = "UPDATE fees SET paid="+Paid+",extra="+Extra+" WHERE `ID`="+id_num;
                 ps = c.prepareStatement(query);
                 ps.executeUpdate();
+                try {
+                    Calendar cal = new GregorianCalendar();
+                    int date = cal.get(Calendar.DATE);
+                    int mon = cal.get(Calendar.MONTH);
+                    mon++;
+                    int yr = cal.get(Calendar.YEAR);
+                    query = "INSERT INTO `database_central`.`history` (`ID`, `userID`, `amount`, `date`) VALUES (NULL, '"+id_num+"', '-"+input+"', '"+yr+"-"+mon+"-"+date+"')";
+                    ps = c.prepareStatement(query);
+                    ps.executeUpdate();
+                }
+                catch(SQLException e) {
+                    JOptionPane.showMessageDialog(SearchPane, "Recent Table not updated.\nline = 980 error");
+                }
+                
             }
             
                 
             
         } catch (SQLException ex) {
+            System.out.println("Line = 1287");
             Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         //refresh all items
         try {
+            
+            int paidlocal = 0;                                               //Local Variable for getting paid value.
             String q = "SELECT * FROM fees WHERE `ID`="+id_num;
             st = c.createStatement();
             ResultSet rss = st.executeQuery(q);
             while(rss.next())
             {
-                paid.setText(rss.getString(3));
-                bal.setText(String.valueOf(s-rss.getInt(3)));
+                paidlocal = rss.getInt(3);
+                extraRealAmount=rss.getInt(6);
             }
-
+            total = paidlocal + extraRealAmount;
+            paid.setText(String.valueOf(total));
+            bal.setText(String.valueOf(s-total));
+            
         } catch (SQLException ex) {
+            System.out.println("Line=1307");
             Logger.getLogger(PayFees.class.getName()).log(Level.SEVERE, null, ex);
         }
         paidAmount = paid.getText();

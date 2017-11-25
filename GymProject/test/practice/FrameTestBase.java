@@ -14,22 +14,7 @@ import java.awt.*;
  */
 
 
-class BgPanel extends JPanel {
-    Image bg = new ImageIcon("water.jpg").getImage();
-    @Override
-    public void paintComponent(Graphics g) {
-        g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
-    }
-}
 
-class LoginPanel extends JPanel {
-    LoginPanel() {
-        setOpaque(false);
-        setLayout(new FlowLayout());
-        add(new JLabel("username: ")); add(new JTextField(10));
-        add(new JLabel("password: ")); add(new JPasswordField(10));
-    }
-}
 
 
 public class FrameTestBase extends javax.swing.JFrame {
@@ -39,6 +24,11 @@ public class FrameTestBase extends javax.swing.JFrame {
      */
     public FrameTestBase() {
         initComponents();
+    }
+    
+    void btn()
+    {
+        JOptionPane.showMessageDialog(null, "1 = "+ timePicker1);
     }
 
     /**
@@ -50,21 +40,82 @@ public class FrameTestBase extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        dateTime1 = new org.joda.time.DateTime();
+        dateTime2 = new org.joda.time.DateTime();
+        instant1 = new org.joda.time.Instant();
+        localTime1 = new org.joda.time.LocalTime();
+        localTime2 = new org.joda.time.LocalTime();
+        jTimeChooserDemo1 = new lu.tudor.santec.jtimechooser.demo.JTimeChooserDemo();
+        zoneInfoLogger1 = new org.joda.time.tz.ZoneInfoLogger();
+        jButton1 = new javax.swing.JButton();
+        time = new lu.tudor.santec.jtimechooser.JTimeChooser();
+        timePicker1 = new com.github.lgooddatepicker.components.TimePicker();
+        datePicker1 = new com.github.lgooddatepicker.components.DatePicker();
+        dateTimePicker1 = new com.github.lgooddatepicker.components.DateTimePicker();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jButton1.setText("jButton1");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(80, 80, 80))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(datePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(159, 159, 159)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dateTimePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(datePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addComponent(dateTimePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(jButton1)
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        btn();
+    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        btn();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -95,25 +146,28 @@ public class FrameTestBase extends javax.swing.JFrame {
         }
         //</editor-fold>
         */
-        JPanel bgPanel = new BgPanel();
-        bgPanel.setLayout(new BorderLayout());
-        bgPanel.add(new LoginPanel(), BorderLayout.CENTER);
-
-        FrameTestBase t = new FrameTestBase();
-        t.setContentPane(bgPanel);
-        t.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        t.setSize(250, 100);
-        t.setVisible(true);
         
         
         /* Create and display the form */
-        /*java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrameTestBase().setVisible(true);
             }
-        });*/
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.github.lgooddatepicker.components.DatePicker datePicker1;
+    private org.joda.time.DateTime dateTime1;
+    private org.joda.time.DateTime dateTime2;
+    private com.github.lgooddatepicker.components.DateTimePicker dateTimePicker1;
+    private org.joda.time.Instant instant1;
+    private javax.swing.JButton jButton1;
+    private lu.tudor.santec.jtimechooser.demo.JTimeChooserDemo jTimeChooserDemo1;
+    private org.joda.time.LocalTime localTime1;
+    private org.joda.time.LocalTime localTime2;
+    private lu.tudor.santec.jtimechooser.JTimeChooser time;
+    private com.github.lgooddatepicker.components.TimePicker timePicker1;
+    private org.joda.time.tz.ZoneInfoLogger zoneInfoLogger1;
     // End of variables declaration//GEN-END:variables
 }

@@ -173,7 +173,7 @@
                   <Color blue="f0" green="f0" red="f0" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Attendence"/>
+                <Property name="text" type="java.lang.String" value="Last payment"/>
                 <Property name="opaque" type="boolean" value="true"/>
               </Properties>
               <Events>

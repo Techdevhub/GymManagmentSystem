@@ -77,14 +77,15 @@ public class MenuBackChange extends javax.swing.JFrame {
                 .addContainerGap(209, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 640, 410));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 640, 410));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/practice/water.jpg"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 640, 410));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, -30, 640, 410));
 
-        jMenuBar1.setBackground(new java.awt.Color(255, 0, 0));
-        jMenuBar1.setBorder(null);
+        jMenuBar1.setBackground(new java.awt.Color(0, 0, 0));
+        jMenuBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
         jMenuBar1.setForeground(new java.awt.Color(51, 51, 255));
+        jMenuBar1.setOpaque(false);
 
         jMenu1.setText("File");
 

@@ -81,7 +81,6 @@ public class wellpic extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setTitle("Wellcome Page");
-        setOpaque(true);
         setPreferredSize(new java.awt.Dimension(1253, 687));
         getContentPane().setLayout(null);
 
@@ -118,7 +117,7 @@ public class wellpic extends javax.swing.JInternalFrame {
         att.setFont(new java.awt.Font("Magneto", 0, 24)); // NOI18N
         att.setForeground(new java.awt.Color(240, 240, 240));
         att.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        att.setText("Attendence");
+        att.setText("Last payment");
         att.setOpaque(true);
         att.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -404,9 +403,9 @@ public class wellpic extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_otranieeMouseExited
 
     private void attMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_attMouseClicked
-        Attendance_Paan bp = new Attendance_Paan();
+        TableSelector bp = new TableSelector();
         bp.setVisible(true);
-        bp.view();
+        bp.updatedue();
         pf.setVisible(false);
         NotiPanal.setVisible(false);
         noti++;

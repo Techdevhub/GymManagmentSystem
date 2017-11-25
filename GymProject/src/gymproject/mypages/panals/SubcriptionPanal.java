@@ -24,6 +24,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
     PreparedStatement ps;
     
     int modi_price=0,modi_mon=0;
+    int delID = 0;
     public boolean balance = true;
     
     
@@ -128,6 +129,11 @@ public class SubcriptionPanal extends javax.swing.JPanel {
         Month2 = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JSeparator();
         delete = new javax.swing.JLabel();
+        stuviewpanal = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        Table_Pane1 = new javax.swing.JScrollPane();
+        viewTable1 = new javax.swing.JTable();
+        totalcount = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(856, 444));
 
@@ -318,12 +324,12 @@ public class SubcriptionPanal extends javax.swing.JPanel {
             ViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ViewLayout.createSequentialGroup()
                 .addGap(46, 46, 46)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(59, 59, 59)
                 .addComponent(Table_Pane, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         dynipan.add(View, "card2");
@@ -463,7 +469,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
                         .addGap(7, 7, 7)
                         .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(NewSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
 
         dynipan.add(New, "card3");
@@ -606,7 +612,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
                 .addGroup(ModifyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                     .addComponent(Modi_Selection))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addGroup(ModifyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(ModifyLayout.createSequentialGroup()
                         .addComponent(Name1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -752,7 +758,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
                 .addGroup(DeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Modi_Selection1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addGroup(DeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(DeleteLayout.createSequentialGroup()
                         .addComponent(Name2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -773,6 +779,84 @@ public class SubcriptionPanal extends javax.swing.JPanel {
         );
 
         dynipan.add(Delete, "card5");
+
+        stuviewpanal.setBackground(new java.awt.Color(31, 181, 107));
+
+        jLabel10.setBackground(new java.awt.Color(31, 181, 107));
+        jLabel10.setFont(new java.awt.Font("Tw Cen MT Condensed", 1, 48)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("Table");
+
+        Table_Pane1.setBackground(new java.awt.Color(255, 255, 255));
+        Table_Pane1.setOpaque(false);
+
+        viewTable1.setAutoCreateRowSorter(true);
+        viewTable1.setBackground(new java.awt.Color(31, 181, 107));
+        viewTable1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 181, 107), 1, true));
+        viewTable1.setFont(new java.awt.Font("Tw Cen MT", 0, 20)); // NOI18N
+        viewTable1.setForeground(new java.awt.Color(255, 255, 255));
+        viewTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"1", "1 MONTH", "1", "300"},
+                {"2", "3 MONTH", "3", "800"},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Id", "Name", "DOB", "Phone Number"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        viewTable1.setGridColor(new java.awt.Color(31, 181, 107));
+        viewTable1.setRowHeight(50);
+        viewTable1.setRowMargin(3);
+        viewTable1.setSelectionBackground(new java.awt.Color(1, 151, 77));
+        viewTable1.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        viewTable1.setSurrendersFocusOnKeystroke(true);
+        viewTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                viewTable1MouseClicked(evt);
+            }
+        });
+        Table_Pane1.setViewportView(viewTable1);
+
+        totalcount.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        totalcount.setForeground(new java.awt.Color(0, 0, 255));
+        totalcount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        totalcount.setText("Count = 0");
+
+        javax.swing.GroupLayout stuviewpanalLayout = new javax.swing.GroupLayout(stuviewpanal);
+        stuviewpanal.setLayout(stuviewpanalLayout);
+        stuviewpanalLayout.setHorizontalGroup(
+            stuviewpanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, stuviewpanalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(stuviewpanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(totalcount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
+                    .addComponent(Table_Pane1, javax.swing.GroupLayout.Alignment.LEADING))
+                .addContainerGap())
+        );
+        stuviewpanalLayout.setVerticalGroup(
+            stuviewpanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, stuviewpanalLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(Table_Pane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(totalcount, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(72, 72, 72))
+        );
+
+        dynipan.add(stuviewpanal, "card6");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -802,7 +886,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 444, Short.MAX_VALUE)
+            .addGap(0, 469, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -818,6 +902,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
         New.setVisible(false);
         Modify.setVisible(false);
         Delete.setVisible(false);
+        stuviewpanal.setVisible(false);
         
         resetColor(view_dy);
         setColor(new_dy);
@@ -830,6 +915,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
         New.setVisible(true);
         Modify.setVisible(false);
         Delete.setVisible(false);
+        stuviewpanal.setVisible(false);
         
         setColor(view_dy);
         resetColor(new_dy);
@@ -859,6 +945,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
         New.setVisible(false);
         Modify.setVisible(true);
         Delete.setVisible(false);
+        stuviewpanal.setVisible(false);
         
         setColor(view_dy);
         setColor(new_dy);
@@ -888,6 +975,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
         New.setVisible(false);
         Modify.setVisible(false);
         Delete.setVisible(true);
+        stuviewpanal.setVisible(false);
         
         setColor(view_dy);
         setColor(new_dy);
@@ -896,7 +984,75 @@ public class SubcriptionPanal extends javax.swing.JPanel {
     }//GEN-LAST:event_delete_dyMouseClicked
 
     private void viewTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewTableMouseClicked
-        
+        if(evt.getClickCount()==2)
+        {
+            int[] table_data = viewTable.getSelectedRows();
+            String name;
+            String stTemp;
+            int idtemp = 0;
+            try
+            {
+                name = (String) viewTable.getValueAt(table_data[0], 1);
+                String query = "SELECT ID FROM subcription WHERE `Name`= '"+name+"';";
+                st = c.createStatement();
+                ResultSet rss = st.executeQuery(query);
+                while(rss.next())
+                {
+                    idtemp = rss.getInt(1);
+                }
+                
+                
+                DefaultTableModel tab = (DefaultTableModel)viewTable1.getModel();
+                Object[] row = new Object[4];
+                while(tab.getRowCount()!=0)
+                {
+                    tab.removeRow(0);
+                }
+                        
+                query = "SELECT `ID` FROM fees WHERE `subcription_ID`='"+idtemp+"';";
+                st = c.createStatement();
+                rss = st.executeQuery(query);
+                while(rss.next())
+                {
+                    try
+                    {
+                        
+                        int tempid = 0;
+                        tempid = rss.getInt(1);
+                        String query1 = "SELECT * FROM user WHERE `ID`='"+tempid+"'";
+                        st = c.createStatement();
+                        ResultSet rss1 = st.executeQuery(query1);
+                        
+                        while(rss1.next())
+                        {
+                            
+                            row[0]=rss1.getInt(1);
+                            stTemp = rss1.getString(2)+" "+rss1.getString(3);
+                            row[1]=stTemp;
+                            row[2]=rss1.getDate(5);
+                            row[3]=rss1.getLong(6);
+                            tab.addRow(row);
+                        }
+                    }
+                    catch(SQLException ex)
+                    {
+                        balance = false;
+                        JOptionPane.showMessageDialog(null, "Error In line 1040");
+                    }
+                }
+                totalcount.setText("Count = "+tab.getRowCount());
+                stuviewpanal.setVisible(true);
+                View.setVisible(false);
+                New.setVisible(false);
+                Modify.setVisible(false);
+                Delete.setVisible(false);
+            }
+            catch(SQLException e)
+            {
+                balance = false;
+                JOptionPane.showMessageDialog(null, "Error In line 1054");
+            }
+        }
     }//GEN-LAST:event_viewTableMouseClicked
 
     private void NewNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_NewNameFocusGained
@@ -1028,6 +1184,7 @@ public class SubcriptionPanal extends javax.swing.JPanel {
                 
                 if(rss.next())
                 {
+                    delID = rss.getInt(1);
                     Name2.setText(rss.getString(2));
                     Price2.setText(rss.getString(3));
                     Month2.setText(rss.getString(4));
@@ -1233,34 +1390,104 @@ public class SubcriptionPanal extends javax.swing.JPanel {
         if(select == 0)
         {
             try {
-                String query = "DELETE FROM subcription WHERE `Name`='"+Name2.getText()+"';";
-                ps = c.prepareStatement(query);
-                ps.executeUpdate();
-                balance = false;
-                JOptionPane.showMessageDialog(null, "Subcription Deleted");
-                
-                //update Modi_Selection1
-                Modi_Selection1.removeAllItems();
-                Modi_Selection1.addItem("Select");
-                try
+                DefaultTableModel tab = (DefaultTableModel)viewTable1.getModel();
+                Object[] row = new Object[4];
+                while(tab.getRowCount()!=0)
                 {
-                    query = "select Name from subcription;";
-                    st = c.createStatement();
-                    ResultSet rss = st.executeQuery(query);
-                    while(rss.next())
+                    tab.removeRow(0);
+                }
+                   
+                int counttemp = 0;
+                String query = "SELECT `ID` FROM fees WHERE `subcription_ID`='"+delID+"';";
+                st = c.createStatement();
+                ResultSet rss1 = st.executeQuery(query);
+                while(rss1.next())
+                {
+                    counttemp ++;
+                    
+                    try
                     {
-                        Modi_Selection1.addItem(rss.getString(1));
+
+                        String stTemp;
+                        int tempid = 0;
+                        tempid = rss1.getInt(1);
+                        String query1 = "SELECT * FROM user WHERE `ID`='"+tempid+"'";
+                        st = c.createStatement();
+                        ResultSet rss2 = st.executeQuery(query1);
+
+                        while(rss2.next())
+                        {
+
+                            row[0]=rss2.getInt(1);
+                            stTemp = rss2.getString(2)+" "+rss2.getString(3);
+                            row[1]=stTemp;
+                            row[2]=rss2.getDate(5);
+                            row[3]=rss2.getLong(6);
+                            tab.addRow(row);
+                        }
+                    }
+                    catch(SQLException ex)
+                    {
+                        balance = false;
+                        JOptionPane.showMessageDialog(null, "Error In line 1432");
                     }
                 }
-                catch(Exception e)
+                if(counttemp == 0)
                 {
-                    JOptionPane.showMessageDialog(null,"Cant update Combo Box/nPlease Refresh Page");
+                    try{
+                    query = "DELETE FROM subcription WHERE `Name`='"+Name2.getText()+"';";
+                    ps = c.prepareStatement(query);
+                    ps.executeUpdate();
+                    balance = false;
+                    JOptionPane.showMessageDialog(null, "Subcription Deleted");
+                    delID = 0;
+                    }
+                    catch(SQLException exx)
+                    {
+                        balance = false;
+                        JOptionPane.showMessageDialog(null, "Unable to delete subcription\nError in line 1448");
+                    }
+
+                    //update Modi_Selection1
+                    Modi_Selection1.removeAllItems();
+                    Modi_Selection1.addItem("Select");
+                    try
+                    {
+                        query = "select Name from subcription;";
+                        st = c.createStatement();
+                        ResultSet rss = st.executeQuery(query);
+                        while(rss.next())
+                        {
+                            Modi_Selection1.addItem(rss.getString(1));
+                        }
+                    }
+                    catch(SQLException e)
+                    {
+                        JOptionPane.showMessageDialog(null,"Cant update Combo Box/nPlease Refresh Page");
+                    }
                 }
+                else
+                {
+                    balance = false;
+                    JOptionPane.showMessageDialog(null, "You have some people Who Subcriped This subcription.\nTotal number Of Subcriped user is "+counttemp);
+                    delID = 0;
+                    totalcount.setText("Count = "+tab.getRowCount());
+                    stuviewpanal.setVisible(true);
+                    View.setVisible(false);
+                    New.setVisible(false);
+                    Modify.setVisible(false);
+                    Delete.setVisible(false);
+                }
+                
             } catch (SQLException ex) {
                 Logger.getLogger(SubcriptionPanal.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_deleteMouseClicked
+
+    private void viewTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewTable1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1282,11 +1509,13 @@ public class SubcriptionPanal extends javax.swing.JPanel {
     private javax.swing.JTextField Price2;
     private javax.swing.JLabel Save1;
     private javax.swing.JScrollPane Table_Pane;
+    private javax.swing.JScrollPane Table_Pane1;
     private javax.swing.JPanel View;
     private javax.swing.JLabel delete;
     private javax.swing.JLabel delete_dy;
     private javax.swing.JPanel dynipan;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel17;
@@ -1310,7 +1539,10 @@ public class SubcriptionPanal extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JPanel navipan;
     private javax.swing.JLabel new_dy;
+    private javax.swing.JPanel stuviewpanal;
+    private javax.swing.JLabel totalcount;
     private javax.swing.JTable viewTable;
+    private javax.swing.JTable viewTable1;
     private javax.swing.JLabel view_dy;
     // End of variables declaration//GEN-END:variables
 }
